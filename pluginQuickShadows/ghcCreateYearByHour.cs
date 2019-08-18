@@ -49,7 +49,7 @@ namespace pluginQuickShadows
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Year by Hour", "Year", "Year Class Object by Hour", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Year by Hour", "YearXHour", "Year Class Object by Hour", GH_ParamAccess.item);
             pManager.AddVectorParameter("Sun Position Vectors", "Vectors", 
                 "List of Sun Position Vectors", GH_ParamAccess.list);
         }
@@ -66,22 +66,25 @@ namespace pluginQuickShadows
             List<double> iAltitudeAngles = new List<double>();
             List<double> iAzumithAngles = new List<double>();
 
-            DA.GetData("Time of Day", ref iClockTimes);
-            DA.GetData("Altitude Angles", ref iAltitudeAngles);
-            DA.GetData("Azumith Angles", ref iAzumithAngles);
+            DA.GetDataList("Time of Day", iClockTimes);
+            DA.GetDataList("Altitude Angles", iAltitudeAngles);
+            DA.GetDataList("Azumith Angles", iAzumithAngles);
+
 
             /* check to make sure hours and angles are of equal lengths */
             if (iClockTimes.Count != iAltitudeAngles.Count || iAltitudeAngles.Count != iAzumithAngles.Count)
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error,
-                    "the number of Altitude Angles, Azumith Angles, Hours is not the same.");
+                    "The number of Altitude Angles, Azumith Angles, Hours is not the same.");
 
             /* check to make sure that there are the correct number of hours in the year */
             if (iClockTimes.Count != 8760 || iClockTimes.Count != 8761)
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error,
-                    "Not the right number of hours in this year");
+                    "Incorrect number of hours in this year");
 
             /* initiate the new year by hour object with the current sun position data */
             YearByHour currentYear = new YearByHour(iClockTimes, iAltitudeAngles, iAzumithAngles);
+            DA.SetData("Year by Hour", currentYear);
+            DA.SetDataList("Sun Position Vectors", currentYear.GetSunVectors());
         }
 
         /// <summary>

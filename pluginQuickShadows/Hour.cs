@@ -16,27 +16,18 @@ namespace pluginQuickShadows
         public readonly double altitudeAngle;
         public readonly double azumithAngle;
 
+        public readonly Vector3d sunVector;
+
         public Hour(double newClockTime, double newAltitudeAngle, double newAzumithAngle)
         {
             clockTime = newClockTime;
             altitudeAngle = RhinoMath.ToRadians(newAltitudeAngle);
             azumithAngle = RhinoMath.ToRadians(newAzumithAngle);
+
+            sunVector = CreateSunVector();
         }
 
-        public string ReturnRegularTime()
-        {
-            string amPM;
-            string regularTime = clockTime.ToString();
-
-            if (clockTime < 12)
-                amPM = "am";
-            else amPM = "pm";
-
-            regularTime += amPM;
-            return regularTime;
-        }
-
-        public Vector3d GetSunVector()
+        private Vector3d CreateSunVector()
         {
             /* set up a horizontal curve in the y direction that can be rotated */
             Point3d myStartPoint = new Point3d(0.0, 0.0, 0.0);
@@ -56,9 +47,22 @@ namespace pluginQuickShadows
 
             /* set up the line from the start and end points of the curve so that the direction vector can be derived */
             Line vectorLine = new Line(myCurve.PointAtStart, myCurve.PointAtEnd);
-            Vector3d sunVector = new Vector3d(vectorLine.Direction);
+            Vector3d mySunVector = new Vector3d(vectorLine.Direction);
                       
-            return sunVector;
+            return mySunVector;
+        }
+
+        public string ReturnRegularTime()
+        {
+            string amPM;
+            string regularTime = clockTime.ToString();
+
+            if (clockTime < 12)
+                amPM = "am";
+            else amPM = "pm";
+
+            regularTime += amPM;
+            return regularTime;
         }
     }
 }

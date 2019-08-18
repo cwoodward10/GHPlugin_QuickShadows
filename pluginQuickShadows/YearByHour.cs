@@ -14,8 +14,11 @@ namespace pluginQuickShadows
         public List<double> altitudeAngles;
         public List<double> azumithAngles;
 
-        List<Hour> hoursInYear = new List<Hour>();
-        List<Day> daysInYear = new List<Day>();
+        public readonly List<Hour> hoursInYear = new List<Hour>();
+        public readonly List<Day> daysInYear = new List<Day>();
+        public readonly List<Month> monthsInYear = new List<Month>();
+
+        public readonly bool leapYear = false; 
 
         public YearByHour(List<double> newTimeList, List<double> newAltitudeList, List<double> newAzumithList)
         {
@@ -23,19 +26,12 @@ namespace pluginQuickShadows
             for (int t = 0; t < clockTimes.Count; t++)
                 hoursInYear.Add((new Hour(clockTimes[t], altitudeAngles[t], azumithAngles[t])));
 
-            /* create day objects from the hours in the year */
-            createDaysFromHoursList();
-
-            /* set the number of days in a month */
-            List<int> dayInMonthCount = new List<int> { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-            /* change February if need be */
-            if (clockTimes.Count == 8761) dayInMonthCount[1] = 29;
-
-
-
+            /* create Months and Days */
+            CreateDaysFromHoursList();
+            CreateMonthsFromDaysList();
         }
 
-        private void createDaysFromHoursList()
+        private void CreateDaysFromHoursList()
         {
             
             /* create a Day objects for each 24 hour chunk in list */
@@ -51,8 +47,17 @@ namespace pluginQuickShadows
             /* send each 24 hour chunk of hours to a Day object along with it's day of year d*/
             for (int d = 0; d < listOfDays.Count; d++)
             {
-                daysInYear.Add(new Day(listOfDays[d].ToList(), d));
+                daysInYear.Add(new Day(listOfDays[d].ToList(), d, leapYear));
             }
+        }
+
+        private void CreateMonthsFromDaysList()
+        {
+            foreach (var daysInMonth in daysInYear.GroupBy(m => m.MonthNumber))
+            {
+                monthsInYear.Add(new Month(daysInMonth.ToList(), daysInMonth.Key));
+            };
+
         }
 
         public List<Vector3d> GetSunVectors()
@@ -60,7 +65,7 @@ namespace pluginQuickShadows
             List<Vector3d> sunVectorList = new List<Vector3d>();
 
             foreach (Hour h in hoursInYear)
-                sunVectorList.Add(h.GetSunVector());
+                sunVectorList.Add(h.sunVector);
 
             return sunVectorList;
         }

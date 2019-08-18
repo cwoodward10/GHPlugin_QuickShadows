@@ -59,6 +59,7 @@
     <Compile Include="Day.cs" />
     <Compile Include="Hour.cs" />
     <Compile Include="ghcCreateYearByHour.cs" />
+    <Compile Include="Month.cs" />
     <Compile Include="pluginQuickShadowsInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="YearByHour.cs" />
