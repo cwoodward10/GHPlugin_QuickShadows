@@ -22,6 +22,9 @@ namespace pluginQuickShadows
 
         public YearByHour(List<double> newTimeList, List<double> newAltitudeList, List<double> newAzumithList)
         {
+            clockTimes = newTimeList;
+            altitudeAngles = newAltitudeList;
+            azumithAngles = newAzumithList;
             /* create an Hour object for each hour in list */
             for (int t = 0; t < clockTimes.Count; t++)
                 hoursInYear.Add((new Hour(clockTimes[t], altitudeAngles[t], azumithAngles[t])));

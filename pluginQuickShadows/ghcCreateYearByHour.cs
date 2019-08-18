@@ -40,7 +40,7 @@ namespace pluginQuickShadows
                 "Time of Day on a given Date", GH_ParamAccess.list);
             pManager.AddNumberParameter("Altitude Angles", "Altitute", 
                 "Altitude of the sun at a given Hour on a given Date", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Azimuth Angles", "Azumith", 
+            pManager.AddNumberParameter("Azumith Angles", "Azumith", 
                 "Azumith angle of the sun at a given Hour on a given Date", GH_ParamAccess.list);
         }
 
@@ -66,9 +66,9 @@ namespace pluginQuickShadows
             List<double> iAltitudeAngles = new List<double>();
             List<double> iAzumithAngles = new List<double>();
 
-            DA.GetDataList("Time of Day", iClockTimes);
-            DA.GetDataList("Altitude Angles", iAltitudeAngles);
-            DA.GetDataList("Azumith Angles", iAzumithAngles);
+            DA.GetDataList(1, iClockTimes);
+            DA.GetDataList(2, iAltitudeAngles);
+            DA.GetDataList(3, iAzumithAngles);
 
 
             /* check to make sure hours and angles are of equal lengths */
@@ -77,7 +77,7 @@ namespace pluginQuickShadows
                     "The number of Altitude Angles, Azumith Angles, Hours is not the same.");
 
             /* check to make sure that there are the correct number of hours in the year */
-            if (iClockTimes.Count != 8760 || iClockTimes.Count != 8761)
+            if (iClockTimes.Count != 8760 && iClockTimes.Count != 8761)
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error,
                     "Incorrect number of hours in this year");
 
