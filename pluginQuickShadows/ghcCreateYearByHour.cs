@@ -11,7 +11,7 @@ using Rhino.Geometry;
 
 namespace pluginQuickShadows
 {
-    public class ghcCreateYearXHour : GH_Component
+    public class ghcCreateYearByHour : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -20,7 +20,7 @@ namespace pluginQuickShadows
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public ghcCreateYearXHour()
+        public ghcCreateYearByHour()
           : base("Create Year By Hour", 
                  "YearXHour",
                  "Organizes a Sun Position output CSV from SUSDesign by year",
@@ -36,11 +36,11 @@ namespace pluginQuickShadows
         {
             pManager.AddNumberParameter("Day of the Year", "Date", 
                 "a number that represents the current Date", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Time of Day in Hours", "Hour", 
+            pManager.AddNumberParameter("Time of Day", "Hour", 
                 "Time of Day on a given Date", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Altitude Angle", "Altitute", 
+            pManager.AddNumberParameter("Altitude Angles", "Altitute", 
                 "Altitude of the sun at a given Hour on a given Date", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Azimuth Angle", "Azumith", 
+            pManager.AddNumberParameter("Azimuth Angles", "Azumith", 
                 "Azumith angle of the sun at a given Hour on a given Date", GH_ParamAccess.list);
         }
 
@@ -50,8 +50,8 @@ namespace pluginQuickShadows
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddGenericParameter("Year by Hour", "Year", "Year Class Object by Hour", GH_ParamAccess.item);
-            pManager.AddVectorParameter("Vectors", "Vectors", 
-                "Vector Tree by sorted by Hour and Month in the Year", GH_ParamAccess.tree);
+            pManager.AddVectorParameter("Sun Position Vectors", "Vectors", 
+                "List of Sun Position Vectors", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -61,15 +61,27 @@ namespace pluginQuickShadows
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            /// construct a line which will be rotated and become the basis for our sun vectors
-            Point3d myStartPoint = new Point3d(0.0, 0.0, 0.0);
-            Point3d myEndPoint = new Point3d(0.0, 10.0, 0.0);
-            LineCurve myInitialCurve = new LineCurve();
-            myInitialCurve.SetStartPoint(myStartPoint);
-            myInitialCurve.SetEndPoint(myEndPoint);
+            /* set up component input variables */
+            List<double> iClockTimes = new List<double>();
+            List<double> iAltitudeAngles = new List<double>();
+            List<double> iAzumithAngles = new List<double>();
 
+            DA.GetData("Time of Day", ref iClockTimes);
+            DA.GetData("Altitude Angles", ref iAltitudeAngles);
+            DA.GetData("Azumith Angles", ref iAzumithAngles);
 
+            /* check to make sure hours and angles are of equal lengths */
+            if (iClockTimes.Count != iAltitudeAngles.Count || iAltitudeAngles.Count != iAzumithAngles.Count)
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error,
+                    "the number of Altitude Angles, Azumith Angles, Hours is not the same.");
 
+            /* check to make sure that there are the correct number of hours in the year */
+            if (iClockTimes.Count != 8760 || iClockTimes.Count != 8761)
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error,
+                    "Not the right number of hours in this year");
+
+            /* initiate the new year by hour object with the current sun position data */
+            YearByHour currentYear = new YearByHour(iClockTimes, iAltitudeAngles, iAzumithAngles);
         }
 
         /// <summary>

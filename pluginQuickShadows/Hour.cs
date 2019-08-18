@@ -23,7 +23,7 @@ namespace pluginQuickShadows
             azumithAngle = RhinoMath.ToRadians(newAzumithAngle);
         }
 
-        public string returnRegularTime()
+        public string ReturnRegularTime()
         {
             string amPM;
             string regularTime = clockTime.ToString();
@@ -36,7 +36,7 @@ namespace pluginQuickShadows
             return regularTime;
         }
 
-        public Vector3d createVector()
+        public Vector3d GetSunVector()
         {
             /* set up a horizontal curve in the y direction that can be rotated */
             Point3d myStartPoint = new Point3d(0.0, 0.0, 0.0);
