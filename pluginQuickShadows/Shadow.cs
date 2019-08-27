@@ -15,7 +15,7 @@ namespace pluginQuickShadows
 
         public SunPosition CurrentSunPosition { get => currentSunPosition; set => currentSunPosition = value; }
         public Mesh OriginObject { get => originObject; set => originObject = value; }
-        public readonly Curve ShadowCurve;
+        public readonly Object ShadowCurve;
 
         private ComponentFunctionInfo ghMeshShadow = Components.FindComponent("MeshShadow");
 
@@ -27,14 +27,14 @@ namespace pluginQuickShadows
             ShadowCurve = CreateShadowCurve();
         }
 
-        private Curve CreateShadowCurve()
+        private Object CreateShadowCurve()
         {
             string[] warnings;
             Plane planeXY = new Plane(new Point3d(0.0, 0.0, 0.0), new Vector3d(0.0, 0.0, 1.0));
 
             object[] result = ghMeshShadow.Evaluate(new Object[] { originObject, currentSunPosition.SunVector, planeXY }, false, out warnings);
 
-            return (Curve)result[0];
+            return result[0];
         }
     }
 }

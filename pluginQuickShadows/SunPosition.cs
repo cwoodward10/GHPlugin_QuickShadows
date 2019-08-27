@@ -9,14 +9,14 @@ namespace pluginQuickShadows
 {
     class SunPosition
     {
-        private int hour;
+        private double hour;
         private int month = 0;
         private int dayInYear = 0;
         private int dayInMonth = 0;
         private double azumithAngle;
         private double altitudeAngle;
 
-        public int Hour { get => hour; set => hour = value; }
+        public double Hour { get => hour; set => hour = value; }
         public int DayInYear { get => dayInYear; set => dayInYear = value; }
         public int Month { get => month; set => month = value; }
         public int DayInMonth { get => dayInMonth; set => dayInMonth = value; }
@@ -26,7 +26,7 @@ namespace pluginQuickShadows
         public readonly Vector3d SunVector;
         public bool IsLeapYear = false;
 
-        public SunPosition(int newHour, double newAltitudeAngle, double newAzumithAngle)
+        public SunPosition(double newHour, double newAltitudeAngle, double newAzumithAngle)
         {
             hour = newHour;
             altitudeAngle = newAltitudeAngle;
@@ -35,7 +35,7 @@ namespace pluginQuickShadows
             SunVector = CreateSunVector();
         }
 
-        public SunPosition(int newHour, int newDayInYear, double newAltitudeAngle, double newAzumithAngle)
+        public SunPosition(double newHour, int newDayInYear, double newAltitudeAngle, double newAzumithAngle)
         {
             hour = newHour;
             DayInYear = newDayInYear;
@@ -46,7 +46,7 @@ namespace pluginQuickShadows
             ConvertDayToMonth();
         }
 
-        public SunPosition(int newHour, int newDayInYear, double newAltitudeAngle, double newAzumithAngle, bool isThisLeapYear)
+        public SunPosition(double newHour, int newDayInYear, double newAltitudeAngle, double newAzumithAngle, bool isThisLeapYear)
         {
             hour = newHour;
             DayInYear = newDayInYear;
