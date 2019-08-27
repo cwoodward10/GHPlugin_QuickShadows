@@ -22,8 +22,8 @@ namespace pluginQuickShadows
         /// </summary>
         public ghcCreateYearByHour()
           : base("Create Year By Hour", 
-                 "YearXHour",
-                 "Organizes a Sun Position output CSV from SUSDesign by year",
+                 "YrXHr",
+                 "Parses a Sun Position output CSV from SUSDesign into a Year Object and a list of Vectors",
                  "Quick Shadow", 
                  "Utility")
         {
